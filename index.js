@@ -19,7 +19,7 @@ const options = {
 const langList = ['ru', 'en', 'uk'];
 let lang = 'uk';
 const stateList = ['on', 'off'];
-let state = 'on';
+const state = {};
 const commands = [{
   name: 'state',
   descr: 'Choice state',
@@ -55,7 +55,7 @@ bot.onText(/\/help/, (msg) => {
 });
 
 // Matches "/state [whatever]"
-bot.onText(/\/state/, (msg, match) => {
+bot.onText(/\/state/, (msg) => {
   // 'msg' is the received Message from Telegram
   // 'match' is the result of executing the regexp above on the text content
   // of the message
@@ -65,13 +65,13 @@ bot.onText(/\/state/, (msg, match) => {
   const resp = msg.text.replace(/\/state\s/, '');
 
   if (!respCheck) {
-    bot.sendMessage(chatId, `State - ${state}`);
+    bot.sendMessage(chatId, `State - ${state[chatId] ? 'on' : 'off'}`);
   }
 
   if (resp && stateList.includes(resp)) {
-    state = resp;
+    state[chatId] = resp === 'off';
     // send back the matched "whatever" to the chat
-    bot.sendMessage(chatId, `State - ${state}`);
+    bot.sendMessage(chatId, `State - ${state[chatId]}`);
   }
 });
 
@@ -101,7 +101,7 @@ bot.onText(/\/lang/, (msg) => {
 bot.on('message', async (msg) => {
   const chatId = msg.chat.id;
 
-  if (state === 'off' || !msg.text || commands.some(c => msg.text.match(c.reg))) {
+  if (state[chatId] || !msg.text || commands.some(c => msg.text.match(c.reg))) {
     return;
   }
 
