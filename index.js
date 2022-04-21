@@ -65,13 +65,13 @@ bot.onText(/\/state/, (msg) => {
   const resp = msg.text.replace(/\/state\s/, '');
 
   if (!respCheck) {
-    bot.sendMessage(chatId, `State - ${state[chatId] ? 'on' : 'off'}`);
+    bot.sendMessage(chatId, `State - ${state[chatId] ? 'off' : 'on'}`);
   }
 
   if (resp && stateList.includes(resp)) {
     state[chatId] = resp === 'off';
     // send back the matched "whatever" to the chat
-    bot.sendMessage(chatId, `State - ${state[chatId]}`);
+    bot.sendMessage(chatId, `State - ${state[chatId] ? 'off' : 'on'}`);
   }
 });
 
